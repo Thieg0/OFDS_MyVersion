@@ -22,9 +22,11 @@ O projeto consiste nos seguintes módulos:
 
 8. **menu.py**: Implementa a classe `Menu`, que permite aos proprietários de restaurantes gerenciar os itens do menu e seus preços.
 
-9. **delivery.py**: Implementa a classe `Delivery`, que rastreia o status da entrega de um pedido.
+9. **delivery.py**: Implementa as classes `Delivery` e `DeliveryLocation` para rastreamento em tempo real de entregas, incluindo coordenadas geográficas, histórico de status e estimativas de tempo.
 
 10. **permissions.py**: Implementa a classe `PermissionManager`, que centraliza a lógica de verificação de permissões em todo o sistema.
+
+11. **app.py**: Aplicação principal que integra todos os módulos e fornece uma interface de linha de comando para interação com o sistema.
 
 ## Conceitos de POO Implementados
 
@@ -65,8 +67,15 @@ Este projeto aplica diversos conceitos de Programação Orientada a Objetos:
 ### Menu
 - A classe `Menu` permite aos proprietários de restaurantes gerenciar os pratos e seus preços.
 
-### Entrega
-- A classe `Delivery` rastreia o status da entrega de um pedido, incluindo atualizações sobre preparação, despacho e entrega.
+### Rastreamento de Entregas em Tempo Real
+- A classe `Delivery` implementa um sistema completo de rastreamento de entregas:
+  - **Status detalhados**: Rastreamento granular com 9 diferentes status (Em preparo, Pronto para entrega, Entregador designado, Pedido coletado, A caminho, Próximo ao destino, Chegou ao destino, Entregue, Cancelado)
+  - **Localização geográfica**: Coordenadas de latitude e longitude do entregador
+  - **Tempo estimado de entrega**: Cálculo dinâmico do tempo restante para entrega
+  - **Histórico completo**: Registro detalhado de todas as mudanças de status com timestamp
+  - **Atribuição de entregador**: Associação de um entregador específico a cada pedido
+  - **Notas de entrega**: Possibilidade de adicionar informações relevantes durante o processo
+  - **Simulação**: Funcionalidade para simular o progresso da entrega em tempo real
 
 ### Gerenciamento de Permissões
 - O sistema utiliza a classe `PermissionManager` para verificar permissões de forma consistente em todo o código.
@@ -79,10 +88,32 @@ Para executar o projeto e mostrar as funcionalidades, use:
 python app.py
 ```
 
+### Fluxo básico de uso:
+
+1. Cadastre-se como Cliente ou Proprietário de Restaurante
+2. (Para Proprietários) Adicione restaurantes e configure seus menus
+3. (Para Clientes) Faça pedidos escolhendo pratos do menu
+4. Adicione instruções de entrega e preferências de horário aos pedidos
+5. Finalize o pedido para iniciar o processo de entrega
+6. Acompanhe o status da entrega em tempo real
+7. Simule o progresso da entrega para testes
+8. Avalie o restaurante após receber o pedido
+
+### Testando o sistema de rastreamento:
+
+Para testar o sistema de rastreamento de entregas em tempo real:
+1. Acesse "Gerenciar Entregas" no menu principal
+2. Utilize a opção "Simular progresso da entrega" repetidamente para ver o ciclo completo
+3. Acompanhe as mudanças de status, coordenadas geográficas e estimativas de tempo
+
 ## Melhorias Implementadas
 
 - Eliminação de importações circulares
-- Centralização de verificações de permissão
+- Centralização de verificações de permissão com a classe `PermissionManager`
 - Encapsulamento apropriado de atributos protegidos
 - Adição de opções de entrega personalizáveis
 - Melhor consistência no design de classes
+- Implementação de um sistema robusto de rastreamento de entregas em tempo real
+- Simulação para testes e demonstrações do sistema
+- Histórico completo de status para pedidos e entregas
+- Interface aprimorada para gerenciamento de entregas

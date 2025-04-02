@@ -120,12 +120,15 @@ def manage_restaurants(owners, restaurants):
     else:
         print("Opção inválida. Tente novamente.")
 
-def manage_orders(customers, restaurants, orders):
+def manage_orders(customers, restaurants, orders, deliveries):
     print("\n--- Gerenciar Pedidos ---")
     print("1. Criar Pedido")
     print("2. Adicionar Item ao Pedido")
-    print("3. Exibir Pedido")
-    print("4. Voltar")
+    print("3. Adicionar Instruções de Entrega")
+    print("4. Definir Preferência de Horário")
+    print("5. Exibir Pedido")
+    print("6. Finalizar Pedido")
+    print("7. Voltar")
     choice = input("Escolha uma opção: ")
 
     if choice == "1":
@@ -142,6 +145,7 @@ def manage_orders(customers, restaurants, orders):
                 print("Restaurante não encontrado.")
         else:
             print("Cliente não encontrado.")
+            
     elif choice == "2":
         customer_name = input("Nome do Cliente: ")
         order = next((o for o in orders if o.customer.name == customer_name), None)
@@ -152,15 +156,55 @@ def manage_orders(customers, restaurants, orders):
             print("Item adicionado ao pedido com sucesso!")
         else:
             print("Pedido não encontrado.")
+            
     elif choice == "3":
+        customer_name = input("Nome do Cliente: ")
+        order = next((o for o in orders if o.customer.name == customer_name), None)
+        if order:
+            instructions = input("Instruções de entrega: ")
+            order.set_delivery_instructions(instructions)
+            print("Instruções de entrega adicionadas com sucesso!")
+        else:
+            print("Pedido não encontrado.")
+            
+    elif choice == "4":
+        customer_name = input("Nome do Cliente: ")
+        order = next((o for o in orders if o.customer.name == customer_name), None)
+        if order:
+            time_preference = input("Horário preferido para entrega (ex: 19:30): ")
+            order.set_delivery_time_preference(time_preference)
+            print("Preferência de horário definida com sucesso!")
+        else:
+            print("Pedido não encontrado.")
+            
+    elif choice == "5":
         customer_name = input("Nome do Cliente: ")
         order = next((o for o in orders if o.customer.name == customer_name), None)
         if order:
             print(order.display_order())
         else:
             print("Pedido não encontrado.")
-    elif choice == "4":
+            
+    elif choice == "6":
+        customer_name = input("Nome do Cliente: ")
+        order = next((o for o in orders if o.customer.name == customer_name), None)
+        if order:
+            # Verifica se já existe uma entrega para este pedido
+            existing_delivery = next((d for d in deliveries if d.order == order), None)
+            if not existing_delivery:
+                from delivery import Delivery
+                delivery = Delivery(order)
+                deliveries.append(delivery)
+                print("Pedido finalizado e entrega iniciada!")
+                print(delivery.display_status())
+            else:
+                print("Este pedido já possui uma entrega em andamento.")
+        else:
+            print("Pedido não encontrado.")
+            
+    elif choice == "7":
         pass
+        
     else:
         print("Opção inválida. Tente novamente.")
 
@@ -297,31 +341,107 @@ def manage_support(support, customers):
 
 def manage_deliveries(orders, deliveries):
     print("\n--- Gerenciar Entregas ---")
-    print("1. Atualizar Status da Entrega")
-    print("2. Exibir Status da Entrega")
-    print("3. Voltar")
+    print("1. Rastrear entrega")
+    print("2. Atualizar status da entrega")
+    print("3. Simular progresso da entrega")
+    print("4. Atribuir entregador")
+    print("5. Atualizar localização")
+    print("6. Adicionar nota de entrega")
+    print("7. Voltar")
     choice = input("Escolha uma opção: ")
 
     if choice == "1":
-        customer_name = input("Nome do Cliente: ")  # Solicita o nome do cliente
-        order = next((o for o in orders if o.customer.name == customer_name), None)  # Busca o pedido pelo nome do cliente
-        if order:
-            new_status = input("Novo Status: ")
-            delivery = Delivery(order)
-            delivery.update_status(new_status)
-            deliveries.append(delivery)
-            print("Status da entrega atualizado com sucesso!")
-        else:
-            print("Pedido não encontrado.")
-    elif choice == "2":
-        customer_name = input("Nome do Cliente: ")  # Solicita o nome do cliente
-        delivery = next((d for d in deliveries if d.order.customer.name == customer_name), None)  # Busca a entrega pelo nome do cliente
+        customer_name = input("Nome do Cliente: ")
+        delivery = next((d for d in deliveries if d.order.customer.name == customer_name), None)
         if delivery:
             print(delivery.display_status())
         else:
             print("Entrega não encontrada.")
+            
+    elif choice == "2":
+        customer_name = input("Nome do Cliente: ")
+        delivery = next((d for d in deliveries if d.order.customer.name == customer_name), None)
+        if delivery:
+            print("Status disponíveis:")
+            print("1. Em preparo")
+            print("2. Pronto para entrega")
+            print("3. Entregador designado")
+            print("4. Pedido coletado")
+            print("5. A caminho")
+            print("6. Próximo ao destino")
+            print("7. Chegou ao destino")
+            print("8. Entregue")
+            print("9. Cancelado")
+            status_choice = input("Escolha o novo status: ")
+            
+            status_map = {
+                "1": "Em preparo",
+                "2": "Pronto para entrega",
+                "3": "Entregador designado",
+                "4": "Pedido coletado",
+                "5": "A caminho",
+                "6": "Próximo ao destino",
+                "7": "Chegou ao destino",
+                "8": "Entregue",
+                "9": "Cancelado"
+            }
+            
+            if status_choice in status_map:
+                notes = input("Notas adicionais (opcional): ")
+                delivery.update_status(status_map[status_choice], notes)
+                print("Status da entrega atualizado com sucesso!")
+            else:
+                print("Opção inválida.")
+        else:
+            print("Entrega não encontrada.")
+            
     elif choice == "3":
+        customer_name = input("Nome do Cliente: ")
+        delivery = next((d for d in deliveries if d.order.customer.name == customer_name), None)
+        if delivery:
+            delivery.simulate_delivery_progress()
+            print("Progresso da entrega simulado com sucesso!")
+            print(delivery.display_status())
+        else:
+            print("Entrega não encontrada.")
+            
+    elif choice == "4":
+        customer_name = input("Nome do Cliente: ")
+        delivery = next((d for d in deliveries if d.order.customer.name == customer_name), None)
+        if delivery:
+            delivery_person = input("Nome do entregador: ")
+            delivery.assign_delivery_person(delivery_person)
+            print(f"Entregador {delivery_person} designado com sucesso!")
+        else:
+            print("Entrega não encontrada.")
+            
+    elif choice == "5":
+        customer_name = input("Nome do Cliente: ")
+        delivery = next((d for d in deliveries if d.order.customer.name == customer_name), None)
+        if delivery:
+            try:
+                latitude = float(input("Latitude: "))
+                longitude = float(input("Longitude: "))
+                delivery.update_location(latitude, longitude)
+                print("Localização atualizada com sucesso!")
+            except ValueError:
+                print("Coordenadas inválidas. Use valores numéricos.")
+        else:
+            print("Entrega não encontrada.")
+            
+    elif choice == "6":
+        customer_name = input("Nome do Cliente: ")
+        delivery = next((d for d in deliveries if d.order.customer.name == customer_name), None)
+        if delivery:
+            note = input("Nota de entrega: ")
+            delivery.add_delivery_note(note)
+            print("Nota adicionada com sucesso!")
+        else:
+            print("Entrega não encontrada.")
+            
+    elif choice == "7":
         pass  # Voltar ao menu principal
+        
     else:
         print("Opção inválida. Tente novamente.")
 
@@ -346,7 +466,7 @@ def main():
             manage_restaurants(owners, restaurants)
 
         elif choice == "3":
-            manage_orders(customers, restaurants, orders)
+            manage_orders(customers, restaurants, orders, deliveries)  # Adicionado deliveries como parâmetro
 
         elif choice == "4":
             manage_reviews(customers, restaurants)
