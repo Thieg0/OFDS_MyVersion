@@ -29,6 +29,20 @@ class Order:
         for item, quantity in self.items.items():
             total += self.restaurant.menu.get_dish_price(item) * quantity
         return total
+    
+    def end_order(self, delivery=None):
+        self.status = "Finalizado"
+        self.restaurant.analytics.add_order_data(self, delivery)
+        self.customer.add_order_to_history(self)
+        return 'Pedido finalizado com sucesso!'
+    
+    def apply_promo_code(self, promo_code):
+        try:
+            self.total_with_discount = self.restaurant.promotions.apply_promotion(promo_code, self.calculate_total())
+            self.applied_promo_code = promo_code
+            return True
+        except ValueError:
+            return False
 
     def set_payment_method(self, payment_method):
         """Define o método de pagamento para o pedido."""
@@ -47,6 +61,12 @@ class Order:
         total = self.calculate_total()
         
         result = f"Pedido de {self.customer.name}:\n{order_details}\nTotal: R${total:.2f}"
+
+        if hasattr(self, 'applied_promo_code') and hasattr(self, 'total_with_discount'):
+            discount = total - self.total_with_discount
+            result += f"\nCódigo promocional aplicado: {self.applied_promo_code}"
+            result += f"\nDesconto: R${discount:.2f}"
+            result += f"\nTotal com desconto: R${self.total_with_discount:.2f}"
         
         if self.delivery_instructions:
             result += f"\nInstruções de entrega: {self.delivery_instructions}"

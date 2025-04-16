@@ -122,13 +122,15 @@ def manage_restaurants(owners, restaurants):
 
 def manage_orders(customers, restaurants, orders, deliveries):
     print("\n--- Gerenciar Pedidos ---")
-    print("1. Criar Pedido")
-    print("2. Adicionar Item ao Pedido")
-    print("3. Adicionar Instruções de Entrega")
-    print("4. Definir Preferência de Horário")
-    print("5. Exibir Pedido")
-    print("6. Finalizar Pedido")
-    print("7. Voltar")
+    print("1. Criar Pedido (Método tradicional)")
+    print("2. Criar Pedido (Método Builder)")
+    print("3. Adicionar Item ao Pedido")
+    print("4. Adicionar Instruções de Entrega")
+    print("5. Definir Preferência de Horário")
+    print("6. Aplicar código promocional")
+    print("7. Exibir Pedido")
+    print("8. Finalizar Pedido")
+    print("9. Voltar")
     choice = input("Escolha uma opção: ")
 
     if choice == "1":
@@ -145,19 +147,68 @@ def manage_orders(customers, restaurants, orders, deliveries):
                 print("Restaurante não encontrado.")
         else:
             print("Cliente não encontrado.")
-            
+
     elif choice == "2":
+        from order_builder import OrderBuilder
+
+        customer_name = input("Nome do Cliente: ")
+        customer = next((c for c in customers if c.name == customer_name), None)
+        if customer:
+            restaurant_name = input("Nome do Restaurante: ")
+            restaurant = next((r for r in restaurants if r.name == restaurant_name), None)
+            if restaurant:
+                builder = OrderBuilder(customer, restaurant)
+
+                adding_items = True
+                while adding_items:
+                    dish_name = input("Nome do Prato (ou deixe em branco para terminar): ")
+                    if not dish_name:
+                        adding_items = False
+                        continue
+
+                    try:
+                        quantity = int(input("Quantidade: "))
+                        builder.add_item(dish_name, quantity)
+                        print(f'Item {dish_name} adicionado ao pedido.')
+                    except ValueError as e:
+                        print(f'Erro: {e}')
+
+                instructions = input("Instruções de entrega (Opcional): ")
+                if instructions:
+                    builder.with_delivery_instructions(instructions)
+
+                time_preference = input("Horário preferido para entrega (Opcional): ")
+                if time_preference:
+                    builder.with_delivery_time(time_preference)
+
+                promo_code = input("Código promocional (Opcional): ")
+                if promo_code:
+                    builder.with_promo_code(promo_code)
+
+                order = builder.build()
+                orders.append(order)
+                print("Pedido criado com sucesso usando Builder!")
+                print(order.display_order())
+            else:
+                print("Restaurante não encontrado.")
+        else:
+            print("Cliente não encontrado.")
+            
+    elif choice == "3":
         customer_name = input("Nome do Cliente: ")
         order = next((o for o in orders if o.customer.name == customer_name), None)
         if order:
             dish_name = input("Nome do Prato: ")
             quantity = int(input("Quantidade: "))
-            order.add_item(dish_name, quantity)
-            print("Item adicionado ao pedido com sucesso!")
+            try:
+                order.add_item(dish_name, quantity)
+                print("Item adicionado ao pedido com sucesso!")
+            except ValueError as e:
+                print(f"Erro: {e}")
         else:
             print("Pedido não encontrado.")
             
-    elif choice == "3":
+    elif choice == "4":
         customer_name = input("Nome do Cliente: ")
         order = next((o for o in orders if o.customer.name == customer_name), None)
         if order:
@@ -167,7 +218,7 @@ def manage_orders(customers, restaurants, orders, deliveries):
         else:
             print("Pedido não encontrado.")
             
-    elif choice == "4":
+    elif choice == "5":
         customer_name = input("Nome do Cliente: ")
         order = next((o for o in orders if o.customer.name == customer_name), None)
         if order:
@@ -176,8 +227,20 @@ def manage_orders(customers, restaurants, orders, deliveries):
             print("Preferência de horário definida com sucesso!")
         else:
             print("Pedido não encontrado.")
+    
+    elif choice == "6":
+        customer_name = input("Nome do Cliente: ")
+        order = next((o for o in orders if o.customer.name == customer_name), None)
+        if order:
+            promo_code = input("Código promocional: ")
+            if order.apply_promo_code(promo_code):
+                print("Código promocional aplicado com sucesso!")
+            else:
+                print("Código promocional inválido.")
+        else:
+            print("Pedido não encontrado.")
             
-    elif choice == "5":
+    elif choice == "7":
         customer_name = input("Nome do Cliente: ")
         order = next((o for o in orders if o.customer.name == customer_name), None)
         if order:
@@ -185,7 +248,7 @@ def manage_orders(customers, restaurants, orders, deliveries):
         else:
             print("Pedido não encontrado.")
             
-    elif choice == "6":
+    elif choice == "8":
         customer_name = input("Nome do Cliente: ")
         order = next((o for o in orders if o.customer.name == customer_name), None)
         if order:
@@ -195,14 +258,16 @@ def manage_orders(customers, restaurants, orders, deliveries):
                 from delivery import Delivery
                 delivery = Delivery(order)
                 deliveries.append(delivery)
-                print("Pedido finalizado e entrega iniciada!")
+                # Utiliza o método finalize_order
+                print(order.finalize_order(delivery))
+                print("Entrega iniciada!")
                 print(delivery.display_status())
             else:
                 print("Este pedido já possui uma entrega em andamento.")
         else:
             print("Pedido não encontrado.")
             
-    elif choice == "7":
+    elif choice == "9":
         pass
         
     else:

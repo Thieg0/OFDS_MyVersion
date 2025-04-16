@@ -20,13 +20,17 @@ O projeto consiste nos seguintes módulos:
 
 7. **order.py**: Implementa a classe `Order`, que representa um pedido feito por um cliente em um restaurante. Inclui opções de entrega personalizáveis.
 
-8. **menu.py**: Implementa a classe `Menu`, que permite aos proprietários de restaurantes gerenciar os itens do menu e seus preços.
+8. **order_builder.py**: Implementa o padrão de design Builder para criação de pedidos de forma mais flexível e fluente.
 
-9. **delivery.py**: Implementa as classes `Delivery` e `DeliveryLocation` para rastreamento em tempo real de entregas, incluindo coordenadas geográficas, histórico de status e estimativas de tempo.
+9. **menu.py**: Implementa a classe `Menu`, que permite aos proprietários de restaurantes gerenciar os itens do menu e seus preços.
 
-10. **permissions.py**: Implementa a classe `PermissionManager`, que centraliza a lógica de verificação de permissões em todo o sistema.
+10. **delivery.py**: Implementa as classes `Delivery` e `DeliveryLocation` para rastreamento em tempo real de entregas, incluindo coordenadas geográficas, histórico de status e estimativas de tempo.
 
-11. **app.py**: Aplicação principal que integra todos os módulos e fornece uma interface de linha de comando para interação com o sistema.
+11. **permissions.py**: Implementa a classe `PermissionManager`, que centraliza a lógica de verificação de permissões em todo o sistema.
+
+12. **analytics.py**: Implementa a classe `RestaurantAnalytics`, que fornece análises e métricas de desempenho para os restaurantes, incluindo geração de gráficos e dashboards.
+
+13. **app.py**: Aplicação principal que integra todos os módulos e fornece uma interface de linha de comando para interação com o sistema.
 
 ## Conceitos de POO Implementados
 
@@ -41,6 +45,8 @@ Este projeto aplica diversos conceitos de Programação Orientada a Objetos:
 4. **Polimorfismo**: Diferentes implementações do método `process_payment()` nas subclasses de `Payment`.
 
 5. **Classes Abstratas**: `User` e `Payment` são classes abstratas que definem interfaces para suas subclasses.
+
+6. **Padrões de Design**: Implementação do padrão Builder para a criação de pedidos, permitindo uma construção mais flexível e legível.
 
 ## Funcionalidades
 
@@ -117,3 +123,6 @@ Para testar o sistema de rastreamento de entregas em tempo real:
 - Simulação para testes e demonstrações do sistema
 - Histórico completo de status para pedidos e entregas
 - Interface aprimorada para gerenciamento de entregas
+- Sistema completo de analytics para restaurantes
+- Implementação do padrão de design Builder para criação flexível de pedidos
+- Integração de códigos promocionais aos pedidos
