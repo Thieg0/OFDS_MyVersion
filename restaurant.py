@@ -1,7 +1,7 @@
 from menu import Menu
 from review import Review
 from promotion import Promotion
-
+from analytics import RestaurantAnalytics
 
 class Restaurant:
     def __init__(self, name, address, owner):
@@ -11,6 +11,7 @@ class Restaurant:
         self.menu = Menu(self)
         self.reviews = Review()
         self.promotions = Promotion(self)
+        self.analytics = RestaurantAnalytics(self)
 
     def add_review(self, user, review_text, rating):
         """Adiciona uma avaliação."""

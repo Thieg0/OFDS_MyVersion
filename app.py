@@ -259,7 +259,7 @@ def manage_orders(customers, restaurants, orders, deliveries):
                 delivery = Delivery(order)
                 deliveries.append(delivery)
                 # Utiliza o método finalize_order
-                print(order.finalize_order(delivery))
+                print(order.end_order(delivery))
                 print("Entrega iniciada!")
                 print(delivery.display_status())
             else:

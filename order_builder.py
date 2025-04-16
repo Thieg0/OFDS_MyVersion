@@ -59,7 +59,7 @@ class OrderBuilder:
         if self._delivery_time_preference:
             self._order.set_delivery_time_preference(self._delivery_time_preference)
 
-        if self.payment_method:
+        if self._payment_method:
             self._order.set_payment_method(self._payment_method)
 
         if self._promo_code:
