@@ -1,4 +1,3 @@
-# promotion.py
 from permissions import PermissionManager
 
 class Promotion:

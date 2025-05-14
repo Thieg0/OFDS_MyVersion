@@ -1,4 +1,3 @@
-# delivery.py
 import datetime
 import random  # Para simular coordenadas de localização na demonstração
 from observer import DeliverySubject

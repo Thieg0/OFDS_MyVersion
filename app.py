@@ -9,6 +9,7 @@ from order import Order
 from menu import Menu
 from delivery import Delivery
 from observer import CustomerNotifier, RestaurantNotifier, AnalyticsTracker
+from dish_decorator import BasicDish, ExtraCheese, ExtraBacon, SpecialSauce, WithoutIngredient
 
 def main_menu():
     print("\n--- Menu Principal ---")
@@ -21,7 +22,8 @@ def main_menu():
     print("7. Gerenciar Suporte")
     print("8. Gerenciar Entregas")
     print("9. Visualizar Notificações")
-    print("10. Sair")
+    print("10. Personalizar Prato")
+    print("11. Sair")
     choice = input("Escolha uma opção: ")
     return choice
 
@@ -127,12 +129,13 @@ def manage_orders(customers, restaurants, orders, deliveries):
     print("1. Criar Pedido (Método tradicional)")
     print("2. Criar Pedido (Método Builder)")
     print("3. Adicionar Item ao Pedido")
-    print("4. Adicionar Instruções de Entrega")
-    print("5. Definir Preferência de Horário")
-    print("6. Aplicar código promocional")
-    print("7. Exibir Pedido")
-    print("8. Finalizar Pedido")
-    print("9. Voltar")
+    print("4. Adicionar Item Personalizado ao Pedido")
+    print("5. Adicionar Instruções de Entrega")
+    print("6. Definir Preferência de Horário")
+    print("7. Aplicar código promocional")
+    print("8. Exibir Pedido")
+    print("9. Finalizar Pedido")
+    print("10. Voltar")
     choice = input("Escolha uma opção: ")
 
     if choice == "1":
@@ -214,13 +217,40 @@ def manage_orders(customers, restaurants, orders, deliveries):
         customer_name = input("Nome do Cliente: ")
         order = next((o for o in orders if o.customer.name == customer_name), None)
         if order:
+            # Chama a função de personalização de prato
+            customized_dish = customize_dish(restaurants)
+            if customized_dish:
+                # Adicionar o prato personalizado ao pedido
+                # Como os pedidos trabalham com strings como chaves, vamos criar uma chave única
+                dish_key = f"Personalizado: {customized_dish.get_description()}"
+                
+                # Adaptar a classe Order para lidar com pratos personalizados
+                if not hasattr(order, 'custom_dishes'):
+                    order.custom_dishes = {}
+                
+                order.custom_dishes[dish_key] = customized_dish
+                
+                # Adicionar ao dict de itens também para manter compatibilidade
+                quantity = int(input("Quantidade: "))
+                order.items[dish_key] = quantity
+                
+                print("Item personalizado adicionado ao pedido com sucesso!")
+            else:
+                print("Personalização de prato cancelada ou falhou.")
+        else:
+            print("Pedido não encontrado.")
+            
+    elif choice == "5":
+        customer_name = input("Nome do Cliente: ")
+        order = next((o for o in orders if o.customer.name == customer_name), None)
+        if order:
             instructions = input("Instruções de entrega: ")
             order.set_delivery_instructions(instructions)
             print("Instruções de entrega adicionadas com sucesso!")
         else:
             print("Pedido não encontrado.")
             
-    elif choice == "5":
+    elif choice == "6":
         customer_name = input("Nome do Cliente: ")
         order = next((o for o in orders if o.customer.name == customer_name), None)
         if order:
@@ -230,7 +260,7 @@ def manage_orders(customers, restaurants, orders, deliveries):
         else:
             print("Pedido não encontrado.")
     
-    elif choice == "6":
+    elif choice == "7":
         customer_name = input("Nome do Cliente: ")
         order = next((o for o in orders if o.customer.name == customer_name), None)
         if order:
@@ -242,7 +272,7 @@ def manage_orders(customers, restaurants, orders, deliveries):
         else:
             print("Pedido não encontrado.")
             
-    elif choice == "7":
+    elif choice == "8":
         customer_name = input("Nome do Cliente: ")
         order = next((o for o in orders if o.customer.name == customer_name), None)
         if order:
@@ -250,7 +280,7 @@ def manage_orders(customers, restaurants, orders, deliveries):
         else:
             print("Pedido não encontrado.")
             
-    elif choice == "8":
+    elif choice == "9":
         customer_name = input("Nome do Cliente: ")
         order = next((o for o in orders if o.customer.name == customer_name), None)
         if order:
@@ -278,7 +308,7 @@ def manage_orders(customers, restaurants, orders, deliveries):
         else:
             print("Pedido não encontrado.")
             
-    elif choice == "9":
+    elif choice == "10":
         pass
         
     else:
@@ -539,6 +569,63 @@ def view_customer_notifications(customers):
         timestamp = notification['timestamp'].strftime("%d/%m/%Y %H:%M:%S")
         print(f"{i}. ['timestamp'] {notification['message']}")
 
+def customize_dish(restaurants):
+    print("\n--- Personalizar Prato ---")
+    
+    restaurant_name = input("Nome do Restaurante: ")
+    restaurant = next((r for r in restaurants if r.name == restaurant_name), None)
+    if not restaurant:
+        print("Restaurante não encontrado.")
+        return None
+    
+    print(restaurant.display_menu())
+    
+    dish_name = input("Nome do Prato para personalizar: ")
+    try:
+        base_dish = restaurant.menu.get_dish(dish_name)
+        customized_dish = base_dish  # Começa com o prato base
+        
+        while True:
+            print("\nPrato atual:", customized_dish.get_description())
+            print("Preço atual: R$", customized_dish.get_price())
+            print("\nOpções de personalização:")
+            print("1. Adicionar queijo extra (+R$3,00)")
+            print("2. Adicionar bacon (+R$4,50)")
+            print("3. Adicionar molho especial (+R$2,00)")
+            print("4. Remover um ingrediente")
+            print("5. Finalizar personalização")
+            
+            option = input("Escolha uma opção: ")
+            
+            if option == "1":
+                customized_dish = ExtraCheese(customized_dish)
+                print("Queijo extra adicionado!")
+            elif option == "2":
+                customized_dish = ExtraBacon(customized_dish)
+                print("Bacon adicionado!")
+            elif option == "3":
+                customized_dish = SpecialSauce(customized_dish)
+                print("Molho especial adicionado!")
+            elif option == "4":
+                ingredient = input("Qual ingrediente deseja remover? ")
+                customized_dish = WithoutIngredient(customized_dish, ingredient)
+                print(f"{ingredient} removido!")
+            elif option == "5":
+                break
+            else:
+                print("Opção inválida.")
+        
+        print("\nPrato personalizado:")
+        print("Descrição:", customized_dish.get_description())
+        print("Preço final: R$", customized_dish.get_price())
+        
+        return customized_dish
+        
+    except ValueError as e:
+        print(f"Erro: {e}")
+        return None
+
+
 def main():
     customers = []
     owners = []
@@ -581,6 +668,11 @@ def main():
             view_customer_notifications(customers)
 
         elif choice == "10":
+            customized_dish = customize_dish(restaurants)
+            if customized_dish:
+                print("\nPrato personalizado criado com sucesso!")
+
+        elif choice == "11":
             print("Saindo...")
             break
 

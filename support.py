@@ -1,4 +1,3 @@
-# support.py
 class Support:
     def __init__(self):
         self._tickets = []

@@ -1,4 +1,3 @@
-# order.py
 class Order:
     def __init__(self, customer, restaurant):
         self.customer = customer
@@ -27,7 +26,12 @@ class Order:
     def calculate_total(self):
         total = 0
         for item, quantity in self.items.items():
-            total += self.restaurant.menu.get_dish_price(item) * quantity
+            # Verifica se é um prato personalizado
+            if hasattr(self, 'custom_dishes') and item in self.custom_dishes:
+                total += self.custom_dishes[item].get_price() * quantity
+            else:
+                # Prato normal do menu
+                total += self.restaurant.menu.get_dish_price(item) * quantity
         return total
     
     def end_order(self, delivery=None):
@@ -57,10 +61,21 @@ class Order:
         self.delivery_time_preference = time_preference
 
     def display_order(self):
-        order_details = "\n".join([f"{item}: {quantity}x" for item, quantity in self.items.items()])
+        order_details = []
+        for item, quantity in self.items.items():
+            # Verifica se é um prato personalizado
+            if hasattr(self, 'custom_dishes') and item in self.custom_dishes:
+                dish = self.custom_dishes[item]
+                order_details.append(f"{dish.get_description()}: {quantity}x - R${dish.get_price():.2f}/unidade")
+            else:
+                # Prato normal do menu
+                price = self.restaurant.menu.get_dish_price(item)
+                order_details.append(f"{item}: {quantity}x - R${price:.2f}/unidade")
+        
+        order_text = "\n".join(order_details)
         total = self.calculate_total()
         
-        result = f"Pedido de {self.customer.name}:\n{order_details}\nTotal: R${total:.2f}"
+        result = f"Pedido de {self.customer.name}:\n{order_text}\nTotal: R${total:.2f}"
 
         if hasattr(self, 'applied_promo_code') and hasattr(self, 'total_with_discount'):
             discount = total - self.total_with_discount
