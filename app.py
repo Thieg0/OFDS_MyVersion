@@ -221,7 +221,7 @@ def manage_orders(customers, restaurants, orders, deliveries):
             customized_dish = customize_dish(restaurants)
             if customized_dish:
                 # Adicionar o prato personalizado ao pedido
-                # Como os pedidos trabalham com strings como chaves, vamos criar uma chave única
+                # Como os pedidos trabalham com strings como chaves
                 dish_key = f"Personalizado: {customized_dish.get_description()}"
                 
                 # Adaptar a classe Order para lidar com pratos personalizados
