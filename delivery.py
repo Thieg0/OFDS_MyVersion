@@ -87,6 +87,8 @@ class Delivery(DeliverySubject):
                 minutes = random.randint(20, 40)
                 self.estimated_delivery_time = datetime.datetime.now() + datetime.timedelta(minutes=minutes)
 
+            print(f"[DEBUG] Atualizando status para {new_status}. Preparando para notificar observadores.")
+
             self.notify()
             
             return True

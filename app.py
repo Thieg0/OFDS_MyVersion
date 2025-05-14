@@ -264,6 +264,10 @@ def manage_orders(customers, restaurants, orders, deliveries):
                 restaurant_notifier = RestaurantNotifier(order.restaurant)
                 analytics_tracker = AnalyticsTracker()
 
+                delivery.attach(customer_notifier)
+                delivery.attach(restaurant_notifier)
+                delivery.attach(analytics_tracker)
+
                 deliveries.append(delivery)
                 # Utiliza o método finalize_order
                 print(order.end_order(delivery))

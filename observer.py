@@ -16,7 +16,7 @@ class CustomerNotifier(DeliveryObserver):
     """
     Concrete observer that notifies the customer of delivery status changes.
     """
-    def init(self, customer):
+    def __init__(self, customer):
         self.customer = customer
 
     def update(self, delivery):
@@ -40,7 +40,7 @@ class RestaurantNotifier(DeliveryObserver):
     """
     Concrete observer that notifies the restaurant of delivery status changes.
     """
-    def init(self, restaurant):
+    def __init__(self, restaurant):
         self.restaurant = restaurant
 
     def update(self, delivery):
@@ -89,5 +89,7 @@ class DeliverySubject:
         """
         Notify all observers of a change in the subject's state.
         """
+        print(f"[DEBUG] Notificando {len(self._observers)} observadores")
         for observer in self._observers:
+            print(f"[DEBUG] Notificando observador: {type(observer).__name__}")
             observer.update(self)
