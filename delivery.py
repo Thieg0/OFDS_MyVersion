@@ -1,6 +1,7 @@
 # delivery.py
 import datetime
 import random  # Para simular coordenadas de localização na demonstração
+from observer import DeliverySubject
 
 
 class DeliveryLocation:
@@ -27,7 +28,7 @@ class DeliveryLocation:
         }
 
 
-class Delivery:
+class Delivery(DeliverySubject):
     """Classe para gerenciar a entrega de um pedido."""
     
     # Status possíveis para uma entrega
@@ -42,6 +43,7 @@ class Delivery:
     STATUS_CANCELLED = "Cancelado"
     
     def __init__(self, order):
+        DeliverySubject.__init__(self)
         self.order = order
         self.status = self.STATUS_PREPARING
         self.status_history = []
@@ -84,6 +86,8 @@ class Delivery:
                 # Estima entre 20 e 40 minutos a partir de agora
                 minutes = random.randint(20, 40)
                 self.estimated_delivery_time = datetime.datetime.now() + datetime.timedelta(minutes=minutes)
+
+            self.notify()
             
             return True
         else:

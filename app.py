@@ -8,6 +8,7 @@ from payment import CreditCard, DebitCard, Pix, Cash
 from order import Order
 from menu import Menu
 from delivery import Delivery
+from observer import CustomerNotifier, RestaurantNotifier, AnalyticsTracker
 
 def main_menu():
     print("\n--- Menu Principal ---")
@@ -19,7 +20,8 @@ def main_menu():
     print("6. Gerenciar Pagamentos")
     print("7. Gerenciar Suporte")
     print("8. Gerenciar Entregas")
-    print("9. Sair")
+    print("9. Visualizar Notificações")
+    print("10. Sair")
     choice = input("Escolha uma opção: ")
     return choice
 
@@ -257,6 +259,11 @@ def manage_orders(customers, restaurants, orders, deliveries):
             if not existing_delivery:
                 from delivery import Delivery
                 delivery = Delivery(order)
+
+                customer_notifier = CustomerNotifier(order.customer)
+                restaurant_notifier = RestaurantNotifier(order.restaurant)
+                analytics_tracker = AnalyticsTracker()
+
                 deliveries.append(delivery)
                 # Utiliza o método finalize_order
                 print(order.end_order(delivery))
@@ -510,6 +517,24 @@ def manage_deliveries(orders, deliveries):
     else:
         print("Opção inválida. Tente novamente.")
 
+def view_customer_notifications(customers):
+    print("\n--- Visualizar Notificações ---")
+    customer_name = input("Nome do Cliente: ")
+    customer = next((c for c in customers if c.name == customer_name), None)
+
+    if not customer:
+        print("Cliente não encontrado.")
+        return
+    
+    if not hasattr(customer, 'notifications') or not customer.notifications:
+        print(f"{customer.name} não possui notificações.")
+        return
+    
+    print(f"\nNotificações para {customer.name}:")
+    for i, notification in enumerate(customer.notifications, 1):
+        timestamp = notification['timestamp'].strftime("%d/%m/%Y %H:%M:%S")
+        print(f"{i}. ['timestamp'] {notification['message']}")
+
 def main():
     customers = []
     owners = []
@@ -549,6 +574,9 @@ def main():
             manage_deliveries(orders, deliveries)
 
         elif choice == "9":
+            view_customer_notifications(customers)
+
+        elif choice == "10":
             print("Saindo...")
             break
 
