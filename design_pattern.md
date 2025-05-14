@@ -3,7 +3,7 @@
 Este documento descreve os padrões de design adicionados ao sistema de delivery de comida online, destacando como foram implementados e seus benefícios para a aplicação.
 
 ## Sumário
-1. [Padrão Builder (Já Implementado)](#padrão-builder)
+1. [Padrão Builder](#padrão-builder)
 2. [Padrão Comportamental: Observer](#padrão-observer)
 3. [Padrão Estrutural: Decorator](#padrão-decorator)
 
@@ -11,7 +11,7 @@ Este documento descreve os padrões de design adicionados ao sistema de delivery
 
 ## Padrão Builder
 
-O padrão Builder já estava implementado no sistema e é utilizado para criar pedidos de forma mais fluente e flexível.
+O padrão Builder é utilizado para criar pedidos de forma mais fluente e flexível.
 
 ### Principais características
 - Permite a criação de pedidos com uma interface fluente
