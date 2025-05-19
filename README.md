@@ -2,6 +2,14 @@
 
 Este projeto é um sistema de delivery de comida online desenvolvido como parte da disciplina de Projeto de Software na Universidade Federal de Alagoas (UFAL), ministrada pelo Professor Dr. Baldoíno Fonseca dos Santos Neto.
 
+## Dependências
+
+Para executar este projeto, você precisa instalar as seguintes bibliotecas:
+
+```bash
+pip install matplotlib
+```
+
 ## Estrutura do Projeto
 
 O projeto consiste nos seguintes módulos:
@@ -30,7 +38,11 @@ O projeto consiste nos seguintes módulos:
 
 12. **analytics.py**: Implementa a classe `RestaurantAnalytics`, que fornece análises e métricas de desempenho para os restaurantes, incluindo geração de gráficos e dashboards.
 
-13. **app.py**: Aplicação principal que integra todos os módulos e fornece uma interface de linha de comando para interação com o sistema.
+13. **observer.py**: Implementa o padrão Observer para notificações de mudanças de status de entrega.
+
+14. **dish_decorator.py**: Implementa o padrão Decorator para personalização de pratos.
+
+15. **app.py**: Aplicação principal que integra todos os módulos e fornece uma interface de linha de comando para interação com o sistema.
 
 ## Conceitos de POO Implementados
 
@@ -46,7 +58,10 @@ Este projeto aplica diversos conceitos de Programação Orientada a Objetos:
 
 5. **Classes Abstratas**: `User` e `Payment` são classes abstratas que definem interfaces para suas subclasses.
 
-6. **Padrões de Design**: Implementação do padrão Builder para a criação de pedidos, permitindo uma construção mais flexível e legível.
+6. **Padrões de Design**: 
+        - **Builder**: Implementação do padrão Builder para a criação de pedidos, permitindo uma construção mais flexível e legível.
+        - **Observer**: Para notificações sobre mudanças de status da entrega.
+        - **Decorator**: Para personalização de pratos com extras e remoção de ingredientes.
 
 ## Funcionalidades
 
@@ -85,6 +100,12 @@ Este projeto aplica diversos conceitos de Programação Orientada a Objetos:
 
 ### Gerenciamento de Permissões
 - O sistema utiliza a classe `PermissionManager` para verificar permissões de forma consistente em todo o código.
+
+### Personalização de Pratos
+- O sistema permite que os clientes personalizem seus pratos com adição de extras (queijo, bacon, molho especial) e remoção de ingredientes.
+
+### Notificações
+- O sistema utiliza o padrão Observer para notificar clientes e restaurantes sobre mudanças de status da entrega.
 
 ## Como Usar
 
@@ -126,3 +147,5 @@ Para testar o sistema de rastreamento de entregas em tempo real:
 - Sistema completo de analytics para restaurantes
 - Implementação do padrão de design Builder para criação flexível de pedidos
 - Integração de códigos promocionais aos pedidos
+- Padrão Observer para notificação automática de mudanças de status
+- Padrão Decorator para personalização de pratos
