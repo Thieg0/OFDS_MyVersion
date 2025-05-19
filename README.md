@@ -59,9 +59,9 @@ Este projeto aplica diversos conceitos de Programação Orientada a Objetos:
 5. **Classes Abstratas**: `User` e `Payment` são classes abstratas que definem interfaces para suas subclasses.
 
 6. **Padrões de Design**: 
-        - **Builder**: Implementação do padrão Builder para a criação de pedidos, permitindo uma construção mais flexível e legível.
-        - **Observer**: Para notificações sobre mudanças de status da entrega.
-        - **Decorator**: Para personalização de pratos com extras e remoção de ingredientes.
+      - **Builder**: Implementação do padrão Builder para a criação de pedidos, permitindo uma construção mais flexível e legível.
+      - **Observer**: Para notificações sobre mudanças de status da entrega.
+      - **Decorator**: Para personalização de pratos com extras e remoção de ingredientes.
 
 ## Funcionalidades
 
